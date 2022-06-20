@@ -1,0 +1,23 @@
+{
+    "#window.title.main": "Potato Sub",
+    "#window.title.render": "Render",
+    "#error.title.unsupportedPlatform": "Not Supported Platfrom",
+    "#error.description.unsupportedPlatform": "Potato Sub does not support the platform that is currently in use: $0",
+    "#section.title.encode": "Encode",
+    "#action.description.openSourceFile": "Select source file",
+    "#action.run.openSourceFile": "Open...",
+    "#input.placeholder.openSourceFile": "Select source video file...",
+    "#action.description.openSubtitleFile": "Select subtitle file",
+    "#action.run.openSubtitleFile": "Open...",
+    "#input.placeholder.openSubtitleFile": "Select source subtitle file...",
+    "#action.description.setDistPath": "Select output path",
+    "#action.run.setDistPath": "Save As...",
+    "#input.placeholder.setDistPath": "Select output video distination...",
+    "#action.description.selectEncoder": "Select encoder",
+    "#encoder.description.ffmpeg": "ffmpeg (defualt, uses CPU encoding)",
+    "#encoder.description.nvidia": "Nvidia (requires a NVIDIA GPU)",
+    "#encoder.description.intel": "Intel (requires an Intel GPU)",
+    "#encoder.description.amd": "AMD (requires an AMD GPU)",
+    "#action.run.renderStart": "Start render",
+    "#action.run.closeWindow": "Close"
+}

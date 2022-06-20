@@ -1,0 +1,12 @@
+body,
+input,
+button {
+    font-family: 'Rubik', sans-serif;
+}
+
+#renderOutput {
+    font-family: 'Cascadia Mono', 'JetBrains Mono', monospace;
+    height: 220px;
+    width: 574px;
+    resize: none;
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+	<title>#window.title.main</title>
+	<script src="js/jquery-3.6.0-uncompressed.js"></script>
+	<script src="js/script.js"></script>
+	<link rel="stylesheet" href="css/style_index.css">
+	<link rel="stylesheet" href="css/font_define.css">
+</head>
+
+<body>
+	<div class="title">
+		<span>#section.title.encode</span>
+	</div>
+	<div class="container">
+		<div class="entry">
+			#action.description.openSourceFile
+			<input id="sourceField" readonly value="#input.placeholder.openSourceFile" />
+			<button id="selectSource">#action.run.openSourceFile</button>
+		</div>
+		<div class="entry">
+			#action.description.openSubtitleFile
+			<input id="subField" readonly value="#input.placeholder.openSubtitleFile" />
+			<button id="selectSub">#action.run.openSubtitleFile</button>
+		</div>
+		<div class="entry">
+			#action.description.setDistPath
+			<input id="distField" readonly value="#input.placeholder.setDistPath" />
+			<button id="selectSaveAs">#action.run.setDistPath</button>
+		</div>
+		<div class="entry">
+			<label for="encoder">#action.description.selectEncoder</label>
+			<select name="encoder" id="encoder">
+				<option value="ffmpeg">#encoder.description.ffmpeg</option>
+				<option value="nv">#encoder.description.nvidia</option>
+				<option value="intel">#encoder.description.intel</option>
+				<option value="amd">#encoder.description.amd</option>
+			</select>
+		</div>
+		<div class="entry">
+			<button id="renderStart">#action.run.renderStart</button>
+		</div>
+	</div>
+</body>
+
+</html>

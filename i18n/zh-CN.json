@@ -1,0 +1,19 @@
+{
+    "#body.title": "Potato Sub",
+    "#section.title.encode": "压制",
+    "#action.description.openSourceFile": "选择源文件",
+    "#action.run.openSourceFile": "打开…",
+    "#input.placeholder.openSourceFile": "选择源文件…",
+    "#action.description.openSubtitleFile": "选择字幕文件",
+    "#action.run.openSubtitleFile": "打开…",
+    "#input.placeholder.openSubtitleFile": "选择字幕文件…",
+    "#action.description.setDistPath": "选择输出路径",
+    "#action.run.setDistPath": "另存为…",
+    "#input.placeholder.setDistPath": "选择输出路径…",
+    "#action.description.selectEncoder": "选择编码器",
+    "#encoder.description.ffmpeg": "ffmpeg （默认、使用 CPU 编码）",
+    "#encoder.description.nvidia": "Nvidia （需要 Nvidia 显卡）",
+    "#encoder.description.intel": "Intel （需要 Intel 显卡）",
+    "#encoder.description.amd": "AMD （需要 AMD 显卡）",
+    "#action.run.renderStart": "开始压制"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "potatosub",
+  "version": "0.0.1",
+  "description": "Graphical tool for burning ass/srt/more subtitle files into videos",
+  "main": "main.js",
+  "author": "potatopotat0",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^19.0.4"
+  },
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "cross-spawn": "^7.0.3"
+  }
+}

@@ -1,4 +1,7 @@
-/node_modules
-/encodeTool
-/.templates
+devTool/
+encodeTool/
+.templates/
+node_modules/
+out/
 test.js
+package-lock.json

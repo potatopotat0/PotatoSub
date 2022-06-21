@@ -4,9 +4,21 @@ button {
     font-family: 'Rubik', sans-serif;
 }
 
+body {
+    background-color: #2e2e2e;
+    color: white;
+}
+
 #renderOutput {
     font-family: 'Cascadia Mono', 'JetBrains Mono', monospace;
     height: 220px;
     width: 574px;
     resize: none;
+    background-color: #3d3d3d;
+    color: white;
+    outline: none;
+}
+
+#renderOutput::-webkit-scrollbar {
+    display: none;
 }

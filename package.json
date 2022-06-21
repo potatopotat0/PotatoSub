@@ -1,18 +1,82 @@
 {
-  "name": "potatosub",
-  "version": "0.0.1",
-  "description": "Graphical tool for burning ass/srt/more subtitle files into videos",
-  "main": "main.js",
-  "author": "potatopotat0",
-  "license": "MIT",
-  "devDependencies": {
-    "electron": "^19.0.4"
-  },
-  "scripts": {
-    "start": "electron ."
-  },
-  "dependencies": {
-    "child_process": "^1.0.2",
-    "cross-spawn": "^7.0.3"
-  }
+	"name": "potatosub",
+	"version": "0.1.0",
+	"description": "A handy app to burn subtitles into videos",
+	"main": "app/main.js",
+	"author": "potatopotat0",
+	"license": "MIT",
+	"devDependencies": {
+		"@electron-forge/cli": "^6.0.0-beta.64",
+		"@electron-forge/maker-deb": "^6.0.0-beta.64",
+		"@electron-forge/maker-rpm": "^6.0.0-beta.64",
+		"@electron-forge/maker-squirrel": "^6.0.0-beta.64",
+		"@electron-forge/maker-zip": "^6.0.0-beta.64",
+		"electron": "^19.0.4",
+		"electron-packager": "^15.5.1"
+	},
+	"scripts": {
+		"start": "electron-forge start",
+		"test": "electron .",
+		"package": "electron-forge package",
+		"make": "electron-forge make",
+		"make32": "electron-forge make --arch=ia32"
+	},
+	"dependencies": {
+		"child_process": "^1.0.2",
+		"cross-spawn": "^7.0.3",
+		"electron-squirrel-startup": "^1.0.0",
+		"upath": "^2.0.1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/potatopotat0/PotatoSub.git"
+	},
+	"keywords": [
+		"subtitle"
+	],
+	"bugs": {
+		"url": "https://github.com/potatopotat0/PotatoSub/issues"
+	},
+	"homepage": "https://github.com/potatopotat0/PotatoSub#readme",
+	"config": {
+		"forge": {
+			"packagerConfig": {
+				"dir": "./app",
+				"icon": "./app/assets/img/icon",
+				"executableName": "PotatoSub",
+				"name": "PotatoSub",
+				"ignore": [
+					"^/app/encodeTool/ffmpeg/darwin$",
+					"^/app/encodeTool/ffmpeg/linux-x64$",
+					"^/app/encodeTool/ffmpeg/linux-ia32$",
+					"^/app/encodeTool/ffmpeg/windows-ia32$",
+					"^/devTool$"
+				]
+			},
+			"makers": [
+				{
+					"name": "@electron-forge/maker-squirrel",
+					"config": {
+						"name": "PotatoSub",
+						"productName": "Potato Sub",
+						"exe": "PotatoSub.exe"
+					}
+				},
+				{
+					"name": "@electron-forge/maker-zip",
+					"platforms": [
+						"darwin"
+					]
+				},
+				{
+					"name": "@electron-forge/maker-deb",
+					"config": {}
+				},
+				{
+					"name": "@electron-forge/maker-rpm",
+					"config": {}
+				}
+			]
+		}
+	}
 }

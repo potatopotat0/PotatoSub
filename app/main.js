@@ -1,16 +1,15 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
-const path = require('path');
-const { exec } = require('child_process');
+const { app, BrowserWindow, ipcMain, dialog, nativeTheme } = require('electron');
+const { spawn } = require('child_process');
 const fs = require('fs');
-const { type } = require('os');
+const upath = require('upath')
 const userLocale = Intl.DateTimeFormat().resolvedOptions().locale;
 var i18nFilePath = new String();
-if (fs.existsSync(`i18n\\${userLocale}.json`)) {
-    i18nFilePath = `i18n\\${userLocale}.json`;
-} else if (fs.existsSync(`i18n\\${userLocale.split('-')[0]}.json`)) {
-    i18nFilePath = `i18n\\${userLocale.split('-')[0]}.json`;
+if (fs.existsSync(upath.toUnix(upath.join(__dirname, "assets", "i18n", `${userLocale}.json`)))) {
+    i18nFilePath = upath.toUnix(upath.join(__dirname, "assets", "i18n", `${userLocale}.json`));
+} else if (fs.existsSync(upath.toUnix(upath.join(__dirname, "assets", "i18n", `${userLocale.split('-')[0]}.json`)))) {
+    i18nFilePath = upath.toUnix(upath.join(__dirname, "assets", "i18n", `${userLocale.split('-')[0]}.json`));
 } else {
-    i18nFilePath = 'i18n\\en-US.json';
+    i18nFilePath = upath.toUnix(upath.join(__dirname, "assets", "i18n", "en.json"));
 }
 const i18nmapping = JSON.parse(fs.readFileSync(i18nFilePath));
 
@@ -40,9 +39,12 @@ const createWindow = () => {
         minWidth: 930,
         minHeight: 650,
         webPreferences: {
-            preload: path.join(__dirname, 'preload_index.js')
-        }
+            preload: upath.join(__dirname, 'preload.js')
+        },
+        icon: upath.join(__dirname, "assets", "img", "icon.ico")
     });
+    nativeTheme.themeSource = 'dark';
+    win.removeMenu();
 
     ipcMain.handle('i18n:query', async (event, key, arg = []) => {
         var rt = i18n(key, arg);
@@ -90,6 +92,23 @@ const createWindow = () => {
             return filePaths[0];
         }
     })
+
+    ipcMain.handle('dialog:customAlert', (event, title, message) => {
+        dialog.showMessageBox({
+            title: title,
+            message: message,
+            type: "warning"
+        });
+    })
+
+    ipcMain.handle('dialog:customError', (event, title, message) => {
+        dialog.showMessageBox({
+            title: title,
+            message: message,
+            type: "error"
+        });
+    })
+
     //handle render request and send back terminal output
     ipcMain.handle('render:sub', (event, sourceVideoPath, sourceSubtitlePath, distPath, encodeArguments) => {
         var encoder = "ffmpeg", arch = new String();
@@ -97,19 +116,30 @@ const createWindow = () => {
             case 'win32':  // fix Windows absolute path for ffmpeg
                 sourceVideoPath = sourceVideoPath.slice(2);
                 sourceSubtitlePath = sourceSubtitlePath.slice(2);
-                if (process.arch === 'x64' || process.env.hasOwnProperty('PROCESSOR_ARCHITEW6432')) arch = "win-amd64";
-                else arch = "win-i386";
+                if (process.arch === 'x64' || process.env.hasOwnProperty('PROCESSOR_ARCHITEW6432')) arch = "windows-x64";
+                else arch = "windows-ia32";
                 break;
             case 'darwin':
                 arch = "darwin";
                 break;
             case 'linux':
-                if (process.arch === 'x64') arch = "linux-amd64";
-                else arch = "linux-i386";
+                arch = `linux-${process.arch}`
                 break;
             default:
-                dialog.showErrorBox(i18n("#error.title.unsupportedPlatform"), i18n("#error.description.unsupportedPlatform", [process.platform]));
+                dialog.showMessageBox({
+                    title: i18n("#error.title.unsupportedPlatform"),
+                    message: i18n("#error.description.unsupportedPlatform", [process.platform]),
+                    type: "error"
+                });
                 return;
+        }
+        if (fs.existsSync(upath.toUnix(upath.join(__dirname, "encodeTool", encoder, arch, `ffmpeg${process.platform === "win32" ? ".exe" : ""}`))) === false) {
+            dialog.showMessageBox({
+                title: i18n("#error.title.encoderNotFound"),
+                message: i18n("#error.description.encoderNotFound", [encoder, arch]),
+                type: "error"
+            });
+            return;
         }
         const renderWindow = new BrowserWindow({
             width: 600,
@@ -118,15 +148,17 @@ const createWindow = () => {
             minimizable: false,
             resizable: false,
             webPreferences: {
-                preload: path.join(__dirname, 'preload_render.js')
-            }
+                preload: upath.join(__dirname, 'render_process', 'preload.js')
+            },
+            parent: win,
+            modal: true
         });
         renderWindow.removeMenu();
-        renderWindow.loadFile('render_progress.htm').then(() => {
+        renderWindow.loadFile(upath.join(__dirname, 'render_process', 'index.htm')).then(() => {
             renderWindow.webContents.send('render-output', `Encoding started, using command:\n${execCommand}\n\n`);
         });
         const execCommand =
-            `./encodeTool/${encoder}/${arch}/ffmpeg.exe`.replaceAll('/', process.platform == "win32" ? '\\' : '/') +
+            upath.toUnix(upath.join(__dirname, "encodeTool", encoder, arch, `ffmpeg${process.platform === "win32" ? ".exe" : ""}`)) +
             ' -y' +
             ' -i' +
             ` "${sourceVideoPath}"` +
@@ -134,18 +166,44 @@ const createWindow = () => {
             ` "subtitles='${sourceSubtitlePath}'"` +
             ` "${distPath}"`;
         // console.log(execCommand);
-        var renderer = exec(execCommand);
+        var renderer = spawn(
+            upath.toUnix(upath.join(__dirname, "encodeTool", encoder, arch, `ffmpeg${process.platform === "win32" ? ".exe" : ""}`)), [
+            '-y',
+            '-i',
+            `${sourceVideoPath}`,
+            '-vf',
+            `subtitles='${sourceSubtitlePath}'`,
+            `${distPath}`
+        ]);
+        const preventTerminatingRender = (event) => {
+            event.preventDefault();
+            dialog.showMessageBox(renderWindow, {
+                title: i18n("#alert.title.eliminateRender"),
+                message: i18n("#alert.description.eliminateRender"),
+                type: "warning",
+                noLink: true,
+                buttons: [i18n("#action.run.confirm"), i18n("#action.run.cancel")],
+                defaultId: 1
+            }).then((result) => {
+                if (result.response === 0) {
+                    renderer.kill('SIGINT');
+                    setTimeout(() => { renderWindow.destroy(); }, 500);
+                }
+            }).catch((err) => { throw err });
+        }
+        renderWindow.on('close', preventTerminatingRender);
         renderer.stderr.on('data', function (data) {
             renderWindow.webContents.send('render-output', data.toString());
         });
         renderer.on('exit', function (code) {
             renderWindow.webContents.send('render-output', "\nRender ended.");
             renderWindow.webContents.send('render-finished');
+            renderWindow.removeListener("close", preventTerminatingRender);
         });
         return "Render task sent";
     });
 
-    win.loadFile('index.htm');
+    win.loadFile(upath.join(__dirname, 'index.htm'));
 
     // win.webContents.openDevTools();
 }

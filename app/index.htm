@@ -2,14 +2,14 @@
 <html>
 
 <head>
+	<base href="./">
 	<meta charset="UTF-8">
 	<!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
 	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
 	<title>#window.title.main</title>
-	<script src="js/jquery-3.6.0-uncompressed.js"></script>
-	<script src="js/script.js"></script>
-	<link rel="stylesheet" href="css/style_index.css">
-	<link rel="stylesheet" href="css/font_define.css">
+	<script src="assets/js/jquery-3.6.0-uncompressed.js"></script>
+	<script src="assets/js/main/script.js"></script>
+	<link rel="stylesheet" href="assets/css/main/style.css">
 </head>
 
 <body>
@@ -32,6 +32,7 @@
 			<input id="distField" readonly value="#input.placeholder.setDistPath" />
 			<button id="selectSaveAs">#action.run.setDistPath</button>
 		</div>
+		<!-- Encoder selection is not available for now
 		<div class="entry">
 			<label for="encoder">#action.description.selectEncoder</label>
 			<select name="encoder" id="encoder">
@@ -41,6 +42,7 @@
 				<option value="amd">#encoder.description.amd</option>
 			</select>
 		</div>
+		-->
 		<div class="entry">
 			<button id="renderStart">#action.run.renderStart</button>
 		</div>
